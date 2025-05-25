@@ -37,3 +37,7 @@ build/
 .cursorrules
 **/logs/
 .cursor
+
+### Docker ###
+docker.env
+.env

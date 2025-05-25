@@ -1,0 +1,59 @@
+spring:
+  ai:
+    mcp:
+      server:
+        name: yapi-mcp-server
+        version: 1.0.0
+        request-timeout: 60
+        instructions: "This service provides some tool for querying API documentation from Yapi"
+        capabilities:
+          prompt: false
+          resource: false
+          completion: false
+
+server:
+  port: 8888
+
+# 启用健康检查端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: when-authorized
+
+yapi:
+  # 从环境变量读取 Yapi 服务地址
+  base-url: ${YAPI_BASE_URL:http://yapi.com}
+  project-tokens:
+    # 从环境变量读取项目 Token
+    3723: ${YAPI_PROJECT_TOKENS_3723:your_token_for_project_1}
+    67890: ${YAPI_PROJECT_TOKENS_67890:your_token_for_project_2}
+  
+  # 线程池配置
+  thread-pool:
+    core-size: 5
+    max-size: 10
+    queue-capacity: 100
+    keep-alive-seconds: 60
+    thread-name-prefix: "yapi-executor-"
+
+  # 缓存配置
+  cache:
+    enabled: true
+    max-size: 1000
+    expire-after-write-minutes: 10
+    warm-up-on-startup: true
+
+# 日志配置
+logging:
+  level:
+    com.code4j.ai.mcp.server.yapi: INFO
+    org.springframework.cloud.openfeign: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: /app/logs/yapi-mcp-server.log 

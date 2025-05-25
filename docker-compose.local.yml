@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  yapi-mcp-server:
+    build:
+      context: .
+      dockerfile: Dockerfile.local
+    container_name: yapi-mcp-server-local
+    ports:
+      - "8888:8888"
+    env_file:
+      - docker.env.example  # 默认配置文件
+    environment:
+      # Spring 配置
+      - SPRING_PROFILES_ACTIVE=docker
+      # JVM 配置
+      - JAVA_OPTS=-Xms256m -Xmx512m -Djava.security.egd=file:/dev/./urandom --enable-preview
+      # Yapi 配置 - 请根据实际情况修改
+      - YAPI_BASE_URL=http://yapi.com
+      # 项目 Token 配置 - 请根据实际情况修改
+      - YAPI_PROJECT_TOKENS_3723=your_token_for_project_1
+      - YAPI_PROJECT_TOKENS_67890=your_token_for_project_2
+    volumes:
+      # 挂载日志目录到宿主机
+      - ./logs:/app/logs
+      # 可选：挂载配置文件
+      - ./config:/app/config:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8888/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    networks:
+      - yapi-network
+
+networks:
+  yapi-network:
+    driver: bridge 
