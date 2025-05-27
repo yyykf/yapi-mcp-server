@@ -1,7 +1,5 @@
 package com.code4j.ai.mcp.server.yapi.service;
 
-import static java.lang.StringTemplate.STR;
-
 import com.code4j.ai.mcp.server.yapi.assembler.YapiInterfaceMapper;
 import com.code4j.ai.mcp.server.yapi.client.YapiClient;
 import com.code4j.ai.mcp.server.yapi.config.YapiProperties;
@@ -86,18 +84,18 @@ public class YapiService {
 
     @Tool(name = "listCategories", description = "根据Yapi项目ID查询接口分类列表")
     public List<CategoryInfoVo> listCategories(@ToolParam(description = "Yapi项目ID") Long projectId) {
-        String cacheKey = STR. "categories_\{ projectId }" ;
+        String cacheKey = "categories_" + projectId;
 
         return cacheService.getOrCompute(cacheKey, List.class, () -> {
             String token = yapiProperties.getProjectTokens().get(projectId);
             if (token == null) {
-                throw new BusinessException(STR. "未找到项目ID为 \{ projectId } 的token配置" );
+                throw new BusinessException("未找到项目ID为 " + projectId + " 的token配置");
             }
 
             YapiResponse<List<YapiResponse.CatMenuData>> response = yapiClient.getCatMenu(projectId, token);
             if (response == null || response.errcode() != 0 || response.data() == null) {
                 throw new BusinessException(
-                        STR. "获取接口分类列表失败: \{ response != null ? response.errmsg() : "未知错误" }" );
+                        "获取接口分类列表失败: " + (response != null ? response.errmsg() : "未知错误"));
             }
 
             List<CompletableFuture<CategoryInfoVo>> futures = response.data().stream()
@@ -146,7 +144,7 @@ public class YapiService {
                             return new ProjectInfoVo(projectId, response.data().name());
                         } else {
                             throw new BusinessException(
-                                    STR. "获取项目信息失败: \{ response != null ? response.errmsg() : "未知错误" }" );
+                                    "获取项目信息失败: " + (response != null ? response.errmsg() : "未知错误"));
                         }
                     })
                     .toList();
@@ -165,7 +163,7 @@ public class YapiService {
         return cacheService.getOrCompute(cacheKey, List.class, () -> {
             String token = yapiProperties.getProjectTokens().get(projectId);
             if (token == null) {
-                throw new BusinessException(STR. "未找到项目ID为 \{ projectId } 的token配置" );
+                throw new BusinessException("未找到项目ID为 " + projectId + " 的token配置");
             }
 
             YapiResponse<YapiResponse.CatInterfaceList> response = yapiClient.listCatInterfaces(token, catId, page,
@@ -174,7 +172,7 @@ public class YapiService {
                 return response.data().list();
             } else {
                 throw new BusinessException(
-                        STR. "获取分类下接口列表失败: \{ response != null ? response.errmsg() : "未知错误" }" );
+                        "获取分类下接口列表失败: " + (response != null ? response.errmsg() : "未知错误"));
             }
         });
     }
@@ -209,7 +207,7 @@ public class YapiService {
         List<CompletableFuture<List<InterfaceSearchResultVo>>> futures = filteredProjects.stream()
                 .map(project -> CompletableFuture.supplyAsync(() -> {
                     try {
-                        String cacheKey = STR. "interface_list_\{ project.projectId() }" ;
+                        String cacheKey = "interface_list_" + project.projectId();
 
                         // 从缓存获取或查询接口列表
                         YapiResponse.InterfaceListData interfaceListData = cacheService.getOrCompute(
@@ -290,12 +288,12 @@ public class YapiService {
             @ToolParam(description = "Yapi接口ID") Long interfaceId,
             @ToolParam(description = "Yapi项目ID，用于获取token") Long projectId) {
 
-        String cacheKey = STR. "interface_detail_\{ interfaceId }_\{ projectId }" ;
+        String cacheKey = "interface_detail_" + interfaceId + "_" + projectId;
 
         return cacheService.getOrCompute(cacheKey, YapiInterfaceDetailVo.class, () -> {
             String token = yapiProperties.getProjectTokens().get(projectId);
             if (token == null) {
-                throw new BusinessException(STR. "未找到项目ID为 \{ projectId } 的token配置" );
+                throw new BusinessException("未找到项目ID为 " + projectId + " 的token配置");
             }
 
             YapiResponse<YapiResponse.InterfaceDetailData> response = yapiClient.getInterfaceDetail(interfaceId, token);
@@ -303,7 +301,7 @@ public class YapiService {
                 return yapiInterfaceMapper.toVo(response.data());
             } else {
                 throw new BusinessException(
-                        STR. "获取接口详情失败: \{ response != null ? response.errmsg() : "未知错误" }" );
+                        "获取接口详情失败: " + (response != null ? response.errmsg() : "未知错误"));
             }
         });
     }
@@ -320,7 +318,7 @@ public class YapiService {
             return "缓存刷新成功";
         } catch (Exception e) {
             log.error("缓存刷新失败", e);
-            return STR. "缓存刷新失败: \{ e.getMessage() }" ;
+            return "缓存刷新失败: " + e.getMessage();
         }
     }
 
@@ -330,13 +328,13 @@ public class YapiService {
     @Tool(name = "clearProjectCache", description = "清空指定项目的缓存")
     public String clearProjectCache(@ToolParam(description = "项目ID") Long projectId) {
         try {
-            cacheService.clearByPrefix(STR. "categories_\{ projectId }" );
-            cacheService.clearByPrefix(STR. "interface_list_\{ projectId }" );
-            cacheService.clearByPrefix(STR. "interface_detail_\{ projectId }" );
-            return STR. "项目 \{ projectId } 的缓存清空成功" ;
+            cacheService.clearByPrefix("categories_" + projectId);
+            cacheService.clearByPrefix("interface_list_" + projectId);
+            cacheService.clearByPrefix("interface_detail_" + projectId);
+            return "项目 " + projectId + " 的缓存清空成功";
         } catch (Exception e) {
             log.error("清空项目缓存失败", e);
-            return STR. "清空项目缓存失败: \{ e.getMessage() }" ;
+            return "清空项目缓存失败: " + e.getMessage();
         }
     }
 
@@ -352,7 +350,7 @@ public class YapiService {
             return "无法获取缓存统计信息";
         } catch (Exception e) {
             log.error("获取缓存统计失败", e);
-            return STR. "获取缓存统计失败: \{ e.getMessage() }" ;
+            return "获取缓存统计失败: " + e.getMessage();
         }
     }
 }

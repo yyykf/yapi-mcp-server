@@ -10,7 +10,7 @@ import org.springframework.context.annotation.*;
  * @Author KaiFan Yu
  * @Date 2025/5/22 23:29
  */
-@Configuration
+@Configuration(proxyBeanMethods = false)
 public class ToolConfig {
 
     @Bean

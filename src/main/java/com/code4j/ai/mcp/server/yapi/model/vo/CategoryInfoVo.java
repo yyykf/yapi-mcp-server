@@ -2,6 +2,7 @@ package com.code4j.ai.mcp.server.yapi.model.vo;
 
 import com.code4j.ai.mcp.server.yapi.model.YapiResponse.CatInterfaceData;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -20,6 +21,6 @@ public record CategoryInfoVo(
         String desc,
         @JsonPropertyDescription("分类下的接口列表")
         List<CatInterfaceData> interfaces
-) {
+) implements Serializable {
 
 }

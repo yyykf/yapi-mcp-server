@@ -10,34 +10,7 @@ spring:
           prompt: false
           resource: false
           completion: false
+  profiles:
+    active: mcp
 server:
   port: 8888
-
-yapi:
-  base-url: http://yapi.com # 请替换为你的Yapi服务地址
-  project-tokens:
-    3723: your_token_for_project_1 # project_id: token
-    67890: your_token_for_project_2 # 另一个 project_id: token
-  # 线程池配置
-  thread-pool:
-    # 核心线程数
-    core-size: 5
-    # 最大线程数
-    max-size: 10
-    # 队列容量
-    queue-capacity: 100
-    # 线程存活时间（秒）
-    keep-alive-seconds: 60
-    # 线程名称前缀
-    thread-name-prefix: "yapi-executor-"
-
-  # 缓存配置
-  cache:
-    # 是否启用缓存
-    enabled: true
-    # 内存缓存最大条目数
-    max-size: 1000
-    # 缓存过期时间（分钟）
-    expire-after-write-minutes: 10
-    # 是否启动时预热缓存
-    warm-up-on-startup: true

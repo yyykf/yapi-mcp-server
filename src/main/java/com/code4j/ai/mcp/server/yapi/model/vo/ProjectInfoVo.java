@@ -1,6 +1,7 @@
 package com.code4j.ai.mcp.server.yapi.model.vo;
 
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
+import java.io.Serializable;
 
 /**
  * @Description 项目信息
@@ -12,6 +13,6 @@ public record ProjectInfoVo(
         Long projectId,
         @JsonPropertyDescription("项目名称")
         String projectName
-) {
+) implements Serializable {
 
 }

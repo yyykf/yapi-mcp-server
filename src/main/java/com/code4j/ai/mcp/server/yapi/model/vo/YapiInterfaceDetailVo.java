@@ -1,6 +1,7 @@
 package com.code4j.ai.mcp.server.yapi.model.vo;
 
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -13,7 +14,7 @@ public record YapiInterfaceDetailVo(
         @JsonPropertyDescription("请求参数信息") RequestInfo requestInfo,
         @JsonPropertyDescription("响应参数信息") ResponseInfo responseInfo,
         @JsonPropertyDescription("其他信息") OtherInfo otherInfo
-) {
+) implements Serializable {
 
     public record BasicInfo(
             @JsonPropertyDescription("接口ID") Long id,
@@ -22,7 +23,7 @@ public record YapiInterfaceDetailVo(
             @JsonPropertyDescription("请求方法") String method,
             @JsonPropertyDescription("所属项目ID") Long projectId,
             @JsonPropertyDescription("所属分类ID") Long catId
-    ) {
+    ) implements Serializable {
 
     }
 
@@ -33,7 +34,7 @@ public record YapiInterfaceDetailVo(
             @JsonPropertyDescription("请求路径参数") List<ReqPathParamVo> reqParams,
             @JsonPropertyDescription("请求头") List<ReqHeaderParamVo> reqHeaders,
             @JsonPropertyDescription("请求查询参数") List<ReqQueryParamVo> reqQuery
-    ) {
+    ) implements Serializable {
 
     }
 
@@ -41,14 +42,14 @@ public record YapiInterfaceDetailVo(
             @JsonPropertyDescription("响应体类型 (json, raw)") String resBodyType,
             @JsonPropertyDescription("响应体内容 (JSON Schema 或其他)") String resBody,
             @JsonPropertyDescription("响应体是否为JSON Schema") boolean resBodyIsJsonSchema
-    ) {
+    ) implements Serializable {
 
     }
 
     public record OtherInfo(
             @JsonPropertyDescription("接口状态 (undone, done, etc.)") String status,
             @JsonPropertyDescription("接口说明(Markdown)") String markdown
-    ) {
+    ) implements Serializable {
 
     }
 
@@ -58,7 +59,7 @@ public record YapiInterfaceDetailVo(
             @JsonPropertyDescription("示例值") String example,
             @JsonPropertyDescription("参数描述") String desc,
             @JsonPropertyDescription("是否必须 (1:是, 0:否)") String required
-    ) {
+    ) implements Serializable {
 
     }
 
@@ -66,7 +67,7 @@ public record YapiInterfaceDetailVo(
             @JsonPropertyDescription("参数名称") String name,
             @JsonPropertyDescription("示例值") String example,
             @JsonPropertyDescription("参数描述") String desc
-    ) {
+    ) implements Serializable {
 
     }
 
@@ -76,7 +77,7 @@ public record YapiInterfaceDetailVo(
             @JsonPropertyDescription("参数示例") String example,
             @JsonPropertyDescription("参数描述/备注") String desc,
             @JsonPropertyDescription("是否必须 (1:是, 0:否)") String required
-    ) {
+    ) implements Serializable {
 
     }
 
@@ -85,7 +86,7 @@ public record YapiInterfaceDetailVo(
             @JsonPropertyDescription("示例值") String example,
             @JsonPropertyDescription("参数描述") String desc,
             @JsonPropertyDescription("是否必须 (1:是, 0:否)") String required
-    ) {
+    ) implements Serializable {
 
     }
 } 

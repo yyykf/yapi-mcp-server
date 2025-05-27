@@ -2,7 +2,7 @@ package com.code4j.ai.mcp.server.yapi.config;
 
 import java.util.Map;
 import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.*;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -17,7 +17,9 @@ public class YapiProperties {
 
     private String baseUrl;
     private Map<Long, String> projectTokens;
+    @NestedConfigurationProperty
     private ThreadPool threadPool = new ThreadPool();
+    @NestedConfigurationProperty
     private Cache cache = new Cache();
 
     /**

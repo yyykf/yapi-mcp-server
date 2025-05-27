@@ -1,6 +1,7 @@
 package com.code4j.ai.mcp.server.yapi.model;
 
 import com.fasterxml.jackson.annotation.*;
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -14,7 +15,7 @@ public record YapiResponse<T>(
         String errmsg,
         @JsonPropertyDescription("响应数据")
         T data
-) {
+) implements Serializable {
 
     @JsonClassDescription("接口分类数据")
     public record CatMenuData(
@@ -27,7 +28,7 @@ public record YapiResponse<T>(
             Long projectId,
             @JsonPropertyDescription("接口分类描述")
             String desc
-    ) {
+    ) implements Serializable {
 
     }
 
@@ -46,7 +47,7 @@ public record YapiResponse<T>(
             Long addTime,
             @JsonProperty("up_time")
             Long upTime
-    ) {
+    ) implements Serializable {
 
     }
 
@@ -55,7 +56,7 @@ public record YapiResponse<T>(
             Integer count,
             Integer total,
             List<CatInterfaceData> list
-    ) {
+    ) implements Serializable {
 
     }
 
@@ -64,7 +65,7 @@ public record YapiResponse<T>(
             @JsonProperty("_id")
             Long id,
             String title
-    ) {
+    ) implements Serializable {
 
     }
 
@@ -89,7 +90,7 @@ public record YapiResponse<T>(
             @JsonProperty("api_opened")
             Boolean apiOpened,
             List<String> tag
-    ) {
+    ) implements Serializable {
 
     }
 
@@ -98,7 +99,7 @@ public record YapiResponse<T>(
             Integer count,
             Integer total,
             List<InterfaceListItem> list
-    ) {
+    ) implements Serializable {
 
     }
 
@@ -140,7 +141,7 @@ public record YapiResponse<T>(
             String reqBodyOther,
             String username,
             String markdown
-    ) {
+    ) implements Serializable {
 
     }
 
@@ -151,7 +152,7 @@ public record YapiResponse<T>(
             String example,
             String desc,
             String required
-    ) {
+    ) implements Serializable {
 
     }
 
@@ -160,7 +161,7 @@ public record YapiResponse<T>(
             String name,
             String example,
             String desc
-    ) {
+    ) implements Serializable {
 
     }
 
@@ -171,7 +172,7 @@ public record YapiResponse<T>(
             String example,
             String desc,
             String required
-    ) {
+    ) implements Serializable {
 
     }
 
@@ -181,7 +182,7 @@ public record YapiResponse<T>(
             String example,
             String desc,
             String required
-    ) {
+    ) implements Serializable {
 
     }
 }

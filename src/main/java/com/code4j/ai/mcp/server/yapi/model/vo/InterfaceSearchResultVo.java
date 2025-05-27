@@ -1,6 +1,7 @@
 package com.code4j.ai.mcp.server.yapi.model.vo;
 
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
+import java.io.Serializable;
 
 /**
  * @Description 接口搜索结果
@@ -24,6 +25,6 @@ public record InterfaceSearchResultVo(
         Long catid,
         @JsonPropertyDescription("接口状态")
         String status
-) {
+) implements Serializable {
 
 }

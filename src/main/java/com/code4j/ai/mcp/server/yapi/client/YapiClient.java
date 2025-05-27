@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
  * @Author KaiFan Yu
  * @Date 2025/5/22 23:29
  */
-@FeignClient(name = "yapiClient", url = "#{yapiProperties.baseUrl}")
+@FeignClient(name = "yapiClient", url = "${yapi.base-url}")
 public interface YapiClient {
 
     /**
