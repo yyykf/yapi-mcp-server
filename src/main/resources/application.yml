@@ -12,5 +12,12 @@ spring:
           completion: false
   profiles:
     active: mcp
+  cloud:
+    refresh:
+      enabled: false
+    openfeign:
+      client:
+        refresh-enabled: false
+      lazy-attributes-resolution: false
 server:
   port: 8888
