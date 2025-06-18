@@ -25,7 +25,7 @@ yapi:
   # 缓存配置
   cache:
     # 是否启用缓存
-    enabled: false
+    enabled: true
     # 内存缓存最大条目数
     max-size: 1000
     # 缓存过期时间（分钟）
@@ -35,4 +35,4 @@ yapi:
 logging:
   level:
     root: info
-    com.code4j.ai.mcp.server.yapi: info
+    com.code4j.ai.mcp.server.yapi: debug
