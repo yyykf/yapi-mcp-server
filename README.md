@@ -1,70 +1,145 @@
-For the Chinese version of this document, please see [README_zh.md](./README_zh.md).
-
----
 # Yapi MCP Server
 
-This project uses Spring Boot Native Image to build a native executable and a minimal Docker image.
+A Model Context Protocol (MCP) Server for Yapi API management platform. This project provides seamless integration between AI assistants and Yapi, allowing you to query API documentation, search interfaces, and manage API information through natural language.
+
+For the Chinese version of this document, please see [README_zh.md](./README_zh.md).
+
+## Features
+
+This MCP server provides the following tools for interacting with Yapi:
+
+| Tool | Description |
+|------|-------------|
+| `listProjects` | List all configured Yapi projects with their IDs and names |
+| `listCategories` | Get interface categories for a specific Yapi project |
+| `listCatInterfaces` | List interfaces within a specific category |
+| `searchInterfaces` | Search API interfaces by project name, keyword, or path |
+| `getInterfaceDetail` | Get detailed information about a specific API interface |
+| `refreshCache` | Manually refresh the Yapi cache |
+| `clearProjectCache` | Clear cache for a specific project |
+| `getCacheStats` | Get cache statistics information |
 
 ## Prerequisites
 
-*   Docker installed and running.
-*   Maven installed (for building the image, if you choose to build it yourself).
+Choose one of the following environments:
 
-## Building the Docker Image (Optional)
+- **Java Environment**: JDK 21+ and Maven 3.6+
+- **Docker Environment**: Docker and Docker Compose
 
-The pre-built image is `yukaifan/yapi-mcp-server`. If you want to build the image yourself, use the following command:
+## Quick Start
+
+### Method 1: Run with Java
 
 ```bash
-mvn -Pnative clean spring-boot:build-image
+# Clone the repository
+git clone https://github.com/yyykf/yapi-mcp-server.git
+cd yapi-mcp-server
+
+# Configure Yapi URL and project tokens
+vim src/main/resources/application-mcp.yml
+
+# Build the project
+mvn clean package
+
+# Run the application
+java -jar target/yapi-mcp-server-0.0.1-SNAPSHOT.jar
 ```
-This command will build the native executable and package it into a Docker image. The image name will typically be determined by the project's artifactId and version. You might need to tag it appropriately if you want a specific name like `yukaifan/yapi-mcp-server`.
 
-## Running the Application
+### Method 2: Run with Docker
 
-1.  **Download Configuration File:**
-    Download the `application-mcp.yml` configuration file from:
-    [https://raw.githubusercontent.com/yyykf/yapi-mcp-server/refs/heads/master/src/main/resources/application-mcp.yml](https://raw.githubusercontent.com/yyykf/yapi-mcp-server/refs/heads/master/src/main/resources/application-mcp.yml)
+```bash
+# Clone the repository
+git clone https://github.com/yyykf/yapi-mcp-server.git
+cd yapi-mcp-server
 
-    Save this file to a directory on your local machine (e.g., `/path/to/your/config/`).
+# Configure Yapi URL and project tokens
+vim src/main/resources/application-mcp.yml
 
-2.  **Customize Configuration:**
-    Open the downloaded `application-mcp.yml` and adjust the settings according to your environment and requirements. This file contains crucial settings for the application to run correctly.
+# Run with Docker Compose
+docker-compose up -d
+```
 
-3.  **Run the Docker Container:**
-    Execute the following command in your terminal, replacing `/path/to/your/application-mcp.yml` with the actual absolute path to where you saved the configuration file:
+## Configuration
 
-    ```bash
-    docker run --rm -p 8888:8888 -v /path/to/your/application-mcp.yml:/workspace/application-mcp.yml yukaifan/yapi-mcp-server
-    ```
-    For example, if you are on Windows and saved the file to `D:\Dev\config\application-mcp.yml`, the command would be:
-    ```bash
-    docker run --rm -p 8888:8888 -v D:\Dev\config\application-mcp.yml:/workspace/application-mcp.yml yukaifan/yapi-mcp-server
-    ```
-    If you are on Linux or macOS and saved it to `/home/user/config/application-mcp.yml`, it would be:
-    ```bash
-    docker run --rm -p 8888:8888 -v /home/user/config/application-mcp.yml:/workspace/application-mcp.yml yukaifan/yapi-mcp-server
-    ```
+Before running the application, you need to configure your Yapi connection settings in `src/main/resources/application-mcp.yml`:
 
-    The application will start, and you should be able to access it at `http://localhost:8888`. The `-v` flag mounts your local configuration file into the container at `/workspace/application-mcp.yml`, which the application expects.
+```yaml
+spring:
+  cloud:
+    openfeign:
+      client:
+        config:
+          yapiClient:
+            url: http://yapi.com # Replace with your Yapi URL
+yapi:
+  project-tokens:
+    123456: "your-project-token-1"  # Project ID: Token
+    789012: "your-project-token-2"  # Add more projects as needed
+```
 
-    ### Using Docker Compose
+## Building Multi-Architecture Docker Images
 
-    Alternatively, after downloading and customizing `application-mcp.yml` (as described in steps 1 and 2 above), you can use Docker Compose to manage the container. Ensure the `application-mcp.yml` file is in the same directory as the `docker-compose.yml` file.
+If you need to build and push multi-architecture Docker images manually, use the provided script:
 
-    To start the application, run:
-    ```bash
-    docker-compose up
-    ```
-    To run in detached mode:
-    ```bash
-    docker-compose up -d
-    ```
-    This will use the `docker-compose.yml` file provided in the project, which is pre-configured to use the `yukaifan/yapi-mcp-server` image, map port `8888`, and mount the `application-mcp.yml` file from the current directory.
+```bash
+./build-and-push.sh <version> <docker-username> <docker-password>
+```
+
+Example:
+```bash
+./build-and-push.sh 1.0.0 myusername mypassword
+```
+
+This script will build images for both `amd64` and `arm64` architectures and create a multi-architecture manifest.
+
+## Documentation
+
+For more detailed project documentation and insights, you can explore the project using DeepWiki:
+
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/yyykf/yapi-mcp-server)
+
+## Integration with Cursor
+
+### Method 1: One-Click Install
+
+Click the button below to automatically install the MCP server in Cursor:
+
+[![Install MCP Server](https://cursor.com/deeplink/mcp-install-dark.svg)](https://cursor.com/install-mcp?name=yapi&config=eyJ1cmwiOiJodHRwOi8vMTI3LjAuMC4xOjg4ODgvc3NlIn0%3D)
+
+### Method 2: Manual Configuration
+
+Add the following configuration to your Cursor MCP settings file (`mcp.json`):
+
+```json
+{
+  "mcpServers": {
+    "yapi": {
+      "url": "http://127.0.0.1:8888/sse"
+    }
+  }
+}
+```
 
 ## Health Check
 
-You can check the application's health by accessing the following endpoint in your browser or using a tool like `curl`:
+Once the application is running, you can check its health status:
 
-`http://localhost:8888/actuator/health`
+```bash
+curl http://localhost:8888/actuator/health
+```
 
-This endpoint should return a status indicating if the application is running correctly.
+Or visit `http://localhost:8888/actuator/health` in your browser.
+
+## Usage Examples
+
+After setting up the MCP server in Cursor, you can use natural language to interact with your Yapi instance:
+
+- "Show me all available projects"
+- "List all API categories in project 123456"
+- "Search for login APIs"
+- "Get details of interface ID 789"
+- "What's the cache status?"
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

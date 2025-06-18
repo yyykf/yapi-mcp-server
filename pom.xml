@@ -23,6 +23,8 @@
         <spring-cloud.version>2024.0.0</spring-cloud.version>
         <jasypt.version>3.0.5</jasypt.version>
         <mapstruct.version>1.6.3</mapstruct.version>
+        <docker.image.platform>linux/arm64</docker.image.platform>
+        <docker.image.name>yukaifan/yapi-mcp-server</docker.image.name>
     </properties>
 
     <dependencyManagement>
@@ -129,11 +131,19 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
                     <image>
-                        <name>yukaifan/yapi-mcp-server</name>
+                        <name>${docker.image.name}</name>
+                        <imagePlatform>${docker.image.platform}</imagePlatform>
+                        <tags>yukaifan/yapi-mcp-server:latest</tags>
                         <env>
                             <BP_JVM_VERSION>21</BP_JVM_VERSION>
                         </env>
                     </image>
+                    <docker>
+                        <publishRegistry>
+                            <username>${docker.publishRegistry.username}</username>
+                            <password>${docker.publishRegistry.password}</password>
+                        </publishRegistry>
+                    </docker>
                 </configuration>
             </plugin>
             <plugin>

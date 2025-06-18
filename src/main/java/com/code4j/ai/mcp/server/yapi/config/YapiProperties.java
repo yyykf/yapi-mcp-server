@@ -15,7 +15,6 @@ import org.springframework.context.annotation.Configuration;
 @Data
 public class YapiProperties {
 
-    private String baseUrl;
     private Map<Long, String> projectTokens;
     @NestedConfigurationProperty
     private ThreadPool threadPool = new ThreadPool();

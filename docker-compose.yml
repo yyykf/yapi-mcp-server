@@ -7,5 +7,5 @@ services:
     ports:
       - "8888:8888"
     volumes:
-      - ./application-mcp.yml:/workspace/application-mcp.yml
+      - ./src/main/resources/application-mcp.yml:/workspace/application-mcp.yml
     restart: unless-stopped

@@ -1,69 +1,143 @@
 # Yapi MCP 服务器
 
-本项目使用 Spring Boot Native Image 构建原生可执行文件和最小化的 Docker 镜像。
+一个用于 Yapi API 管理平台的模型上下文协议（MCP）服务器。本项目提供了 AI 助手与 Yapi 之间的无缝集成，让您可以通过自然语言查询 API 文档、搜索接口并管理 API 信息。
 
-## 先决条件
+## 功能特性
 
-*   已安装并正在运行 Docker。
-*   已安装 Maven（如果您选择自行构建镜像）。
+本 MCP 服务器提供以下工具来与 Yapi 交互：
 
-## 构建 Docker 镜像（可选）
+| 工具 | 描述 |
+|------|------|
+| `listProjects` | 列出所有已配置的 Yapi 项目及其 ID 和名称 |
+| `listCategories` | 获取指定 Yapi 项目的接口分类 |
+| `listCatInterfaces` | 列出指定分类下的接口 |
+| `searchInterfaces` | 根据项目名称、关键字或路径搜索 API 接口 |
+| `getInterfaceDetail` | 获取指定 API 接口的详细信息 |
+| `refreshCache` | 手动刷新 Yapi 缓存 |
+| `clearProjectCache` | 清空指定项目的缓存 |
+| `getCacheStats` | 获取缓存统计信息 |
 
-预构建的镜像是 `yukaifan/yapi-mcp-server`。如果您想自己构建镜像，请使用以下命令：
+## 运行环境要求
 
-```bash
-mvn -Pnative clean spring-boot:build-image
-```
-此命令将构建原生可执行文件并将其打包到 Docker 镜像中。镜像名称通常由项目的 artifactId 和 version 决定。如果您想要特定的名称（如 `yukaifan/yapi-mcp-server`），您可能需要适当地标记它。
+选择以下任一环境：
 
-## 运行应用程序
+- **Java 环境**：JDK 21+ 和 Maven 3.6+
+- **Docker 环境**：Docker 和 Docker Compose
 
-### 1. 下载配置文件：
-从以下地址下载 `application-mcp.yml` 配置文件：
-[https://raw.githubusercontent.com/yyykf/yapi-mcp-server/refs/heads/master/src/main/resources/application-mcp.yml](https://raw.githubusercontent.com/yyykf/yapi-mcp-server/refs/heads/master/src/main/resources/application-mcp.yml)
+## 快速开始
 
-将此文件保存到您本地计算机上的一个目录中（例如 `/path/to/your/config/` 或 `D:\Dev\config\`）。
-
-### 2. 自定义配置：
-打开下载的 `application-mcp.yml` 并根据您的环境和要求调整设置。此文件包含应用程序正确运行所需的关键设置。
-
-### 3. 运行 Docker 容器：
-
-#### 方法一：使用 `docker run`
-
-在终端中执行以下命令，将 `/path/to/your/application-mcp.yml` 替换为您保存配置文件的实际绝对路径：
+### 方法一：使用 Java 运行
 
 ```bash
-docker run --rm -p 8888:8888 -v /path/to/your/application-mcp.yml:/workspace/application-mcp.yml yukaifan/yapi-mcp-server
-```
-例如，如果您使用的是 Windows 系统并将文件保存到 `D:\Dev\config\application-mcp.yml`，则命令应为：
-```bash
-docker run --rm -p 8888:8888 -v D:\Dev\config\application-mcp.yml:/workspace/application-mcp.yml yukaifan/yapi-mcp-server
-```
-如果您使用的是 Linux 或 macOS 系统并将文件保存到 `/home/user/config/application-mcp.yml`，则命令应为：
-```bash
-docker run --rm -p 8888:8888 -v /home/user/config/application-mcp.yml:/workspace/application-mcp.yml yukaifan/yapi-mcp-server
+# 克隆仓库
+git clone https://github.com/yyykf/yapi-mcp-server.git
+cd yapi-mcp-server
+
+# 配置 Yapi 地址和项目 token
+vim src/main/resources/application-mcp.yml
+
+# 编译项目
+mvn clean package
+
+# 运行应用
+java -jar target/yapi-mcp-server-0.0.1-SNAPSHOT.jar
 ```
 
-应用程序将会启动，您应该能够通过 `http://localhost:8888` 访问它。`-v` 标志将您的本地配置文件挂载到容器内的 `/workspace/application-mcp.yml`，这是应用程序所期望的路径。
-
-#### 方法二：使用 `docker-compose`
-
-确保您已经下载了 `application-mcp.yml` 文件并将其与 `docker-compose.yml` 文件放置在同一目录下。然后，在该目录下打开终端并执行以下命令：
+### 方法二：使用 Docker 运行
 
 ```bash
-docker-compose up
-```
-如果您希望在后台运行，可以使用：
-```bash
+# 克隆仓库
+git clone https://github.com/yyykf/yapi-mcp-server.git
+cd yapi-mcp-server
+
+# 配置 Yapi 地址和项目 token
+vim src/main/resources/application-mcp.yml
+
+# 使用 Docker Compose 运行
 docker-compose up -d
 ```
-这将使用 `docker-compose.yml` 文件中的配置来启动服务。`application-mcp.yml` 文件会自动挂载到容器中。
+
+## 配置说明
+
+在运行应用程序之前，您需要在 `src/main/resources/application-mcp.yml` 中配置 Yapi 连接设置：
+
+```yaml
+spring:
+  cloud:
+    openfeign:
+      client:
+        config:
+          yapiClient:
+            url: http://yapi.com # 请替换为你的Yapi服务地址
+yapi:
+  project-tokens:
+    123456: "your-project-token-1"  # 项目 ID: Token
+    789012: "your-project-token-2"  # 根据需要添加更多项目
+```
+
+## 构建多架构 Docker 镜像
+
+如果您需要手动构建和推送多架构 Docker 镜像，请使用提供的脚本：
+
+```bash
+./build-and-push.sh <版本号> <docker用户名> <docker密码>
+```
+
+示例：
+```bash
+./build-and-push.sh 1.0.0 myusername mypassword
+```
+
+此脚本将为 `amd64` 和 `arm64` 架构构建镜像，并创建多架构清单。
+
+## 项目文档
+
+如需了解更详细的项目文档和深入分析，您可以使用 DeepWiki 探索本项目：
+
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/yyykf/yapi-mcp-server)
+
+## 与 Cursor 集成
+
+### 方法一：一键安装
+
+点击下方按钮自动在 Cursor 中安装 MCP 服务器：
+
+[![Install MCP Server](https://cursor.com/deeplink/mcp-install-dark.svg)](https://cursor.com/install-mcp?name=yapi&config=eyJ1cmwiOiJodHRwOi8vMTI3LjAuMC4xOjg4ODgvc3NlIn0%3D)
+
+### 方法二：手动配置
+
+将以下配置添加到您的 Cursor MCP 设置文件（`mcp.json`）中：
+
+```json
+{
+  "mcpServers": {
+    "yapi": {
+      "url": "http://127.0.0.1:8888/sse"
+    }
+  }
+}
+```
 
 ## 健康检查
 
-您可以通过在浏览器中访问以下端点或使用 `curl` 等工具来检查应用程序的健康状况：
+应用程序运行后，您可以检查其健康状态：
 
-`http://localhost:8888/actuator/health`
+```bash
+curl http://localhost:8888/actuator/health
+```
 
-此端点应返回一个状态，指示应用程序是否正在正确运行。
+或在浏览器中访问 `http://localhost:8888/actuator/health`。
+
+## 使用示例
+
+在 Cursor 中设置 MCP 服务器后，您可以使用自然语言与您的 Yapi 实例交互：
+
+- "显示所有可用的项目"
+- "列出项目 123456 中的所有 API 分类"
+- "搜索登录相关的 API"
+- "获取接口 ID 789 的详细信息"
+- "缓存状态如何？"
+
+## 许可证
+
+本项目基于 MIT 许可证 - 详情请参阅 [LICENSE](LICENSE) 文件。
