@@ -31,6 +31,10 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           components: native-image
 
+      - name: Ensure mvnw is executable
+        run: chmod +x mvnw
+        shell: bash
+
       - name: Build native image
         run: ./mvnw -DskipTests native:compile
         shell: bash
