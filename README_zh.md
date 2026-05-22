@@ -1,5 +1,7 @@
 # Yapi MCP 服务器
 
+> **推荐方式：** 如果你只是需要搜索 Yapi 接口或获取接口详情，优先使用轻量的 [Yapi Skill](https://github.com/yyykf/spellbook-skills/blob/main/skills/yapi-skill/SKILL.md)。它通过本地 Python 脚本直接调用 Yapi，不需要启动 Java/Docker MCP Server。只有在需要完整 MCP Server 集成时，再使用本项目。
+
 一个用于 Yapi API 管理平台的模型上下文协议（MCP）服务器。本项目提供了 AI 助手与 Yapi 之间的无缝集成，让您可以通过自然语言查询 API 文档、搜索接口并管理 API 信息。
 
 ## 功能特性
