@@ -1,5 +1,7 @@
 # Yapi MCP Server
 
+> **Recommended:** If you only need to search Yapi interfaces or get interface details, use the lightweight [Yapi Skill](https://github.com/yyykf/spellbook-skills/blob/main/skills/yapi-skill/SKILL.md) first. It calls Yapi through local Python scripts and does not require starting the Java/Docker MCP server. Use this project when you need a full MCP server integration.
+
 A Model Context Protocol (MCP) Server for Yapi API management platform. This project provides seamless integration between AI assistants and Yapi, allowing you to query API documentation, search interfaces, and manage API information through natural language.
 
 For the Chinese version of this document, please see [README_zh.md](./README_zh.md).
