@@ -61,6 +61,10 @@ vim src/main/resources/application-mcp.yml
 docker-compose up -d
 ```
 
+## Native Executables
+
+This repository provides a **Native Build** GitHub Actions workflow that compiles platform-specific binaries with GraalVM native-image for Linux, macOS, and Windows. After the workflow finishes, you can download the executable that matches your system from the workflow run page under **Artifacts** (for Windows the file ends with `.exe`).
+
 ## Configuration
 
 Before running the application, you need to configure your Yapi connection settings in `src/main/resources/application-mcp.yml`:

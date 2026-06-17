@@ -59,6 +59,10 @@ vim src/main/resources/application-mcp.yml
 docker-compose up -d
 ```
 
+## 原生可执行文件
+
+仓库内提供了 **Native Build** GitHub Actions 工作流，使用 GraalVM 的 native-image 功能为 Linux、macOS 和 Windows 编译对应的原生可执行文件。工作流完成后，可在对应运行页面的 **Artifacts** 区域下载适合当前系统的二进制文件（Windows 平台的文件扩展名为 `.exe`）。
+
 ## 配置说明
 
 在运行应用程序之前，您需要在 `src/main/resources/application-mcp.yml` 中配置 Yapi 连接设置：

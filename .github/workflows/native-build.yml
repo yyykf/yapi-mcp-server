@@ -1,0 +1,69 @@
+name: Native Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  native-image:
+    name: Native build (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - macos-latest
+          - windows-latest
+    runs-on: ${{ matrix.os }}
+    env:
+      APP_NAME: yapi-mcp-server
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup GraalVM
+        uses: graalvm/setup-graalvm@v1
+        with:
+          java-version: '21'
+          distribution: 'graalvm'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          components: native-image
+
+      - name: Ensure mvnw is executable
+        run: chmod +x mvnw
+        shell: bash
+
+      - name: Build native image
+        run: ./mvnw -DskipTests native:compile
+        shell: bash
+
+      - name: Collect native executable
+        id: collect
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p native-artifacts
+          for candidate in \
+            "target/${APP_NAME}" \
+            "target/${APP_NAME}.exe" \
+            "target/native/nativeCompile/${APP_NAME}" \
+            "target/native/nativeCompile/${APP_NAME}.exe"; do
+            if [ -f "$candidate" ]; then
+              cp "$candidate" native-artifacts/
+            fi
+          done
+
+          if [ "$(ls -A native-artifacts)" = "" ]; then
+            echo "未找到原生可执行文件" >&2
+            find target -maxdepth 3 -type f -print || true
+            exit 1
+          fi
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: native-${{ matrix.os }}
+          path: native-artifacts/
+          if-no-files-found: error
